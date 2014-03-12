@@ -15,6 +15,8 @@ rule read =
   parse
   | white { read lexbuf }
   | int { NUM (int_of_string (Lexing.lexeme lexbuf)) }
+  | "print" { PRINT }
+  | "set" { SET }
   | id { ID (Lexing.lexeme lexbuf) }
   | newline { NEWLINE }
   | '(' { OPEN }
@@ -23,8 +25,6 @@ rule read =
   | '-' { MINUS }
   | '/' { DIV }
   | '*' { TIMES }
-  | "print" { PRINT }
-  | "set" { SET }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
   | eof { EOF }
 
