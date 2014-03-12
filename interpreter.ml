@@ -6,7 +6,7 @@ type stm = CompoundStm of stm * stm
          | AssignStm of id * exp
          | PrintStm of exp list
 
- and exp = IdExp of id 
+ and exp = IdExp of id
          | NumExp of int
          | OpExp of exp * binop * exp
 
@@ -19,14 +19,14 @@ module Id =
 module Env = Map.Make (Id)
 
 let rec interpStm s env =
-  match s with 
+  match s with
   | CompoundStm (s1,s2) -> interpStm s2 (interpStm s1 env)
   | AssignStm (id,exp) -> Env.add id (interpExp exp env) env
   | PrintStm es -> match es with
                    | [] -> env
                    | e::tl -> print_int (interpExp e env); interpStm (PrintStm tl) env
 
-and interpExp exp env = 
+and interpExp exp env =
   match exp with
   | IdExp id -> Env.find id env
   | NumExp n -> n

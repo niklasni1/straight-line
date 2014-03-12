@@ -11,7 +11,7 @@ let id = ['a'-'z']*
 let white = [' ' '\t' ]*
 let newline = '\r' | '\n' | "\r\n"
 
-rule read = 
+rule read =
   parse
   | white { read lexbuf }
   | int { NUM (int_of_string (Lexing.lexeme lexbuf)) }
@@ -25,6 +25,6 @@ rule read =
   | '*' { TIMES }
   | "print" { PRINT }
   | "set" { SET }
-  | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) } 
+  | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
   | eof { EOF }
 

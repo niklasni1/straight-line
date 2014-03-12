@@ -16,7 +16,7 @@
 %%
 
 prog:
-  | s = stmt; EOF { Some s } 
+  | s = stmt; EOF { Some s }
   | EOF { None };
 
 stmt:
