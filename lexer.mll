@@ -6,9 +6,9 @@ exception SyntaxError of string
 
 }
 
-let int = ['0'-'9']*
-let id = ['a'-'z']*
-let white = [' ' '\t' ]*
+let int = ['0'-'9']+
+let id = ['a'-'z']+
+let white = [' ' '\t' ]
 let newline = '\r' | '\n' | "\r\n"
 
 rule read =
