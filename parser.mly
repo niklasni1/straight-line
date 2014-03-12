@@ -1,3 +1,7 @@
+%{
+  module I = Interpreter
+%}
+
 %token <int> NUM
 %token <string> ID
 %token OPEN
@@ -11,7 +15,12 @@
 %token NEWLINE
 %token EOF
 
-%start <stm option> prog
+(* 'Interpreter' can't be abbreviated as our module definition above will *)
+(* not show up in the generated mli file. *)
+%start <Interpreter.stm option> prog
+
+%type <I.exp> expr
+%type <I.stm> stmt
 
 %%
 
@@ -21,24 +30,24 @@ prog:
 
 stmt:
   | SET; i = ID; e = expr; NEWLINE
-    { `AssignStm (i,e) }
+    { I.AssignStm (i,e) }
   | PRINT; e = expr; NEWLINE
-    { `PrintStm e }
+    { I.PrintStm [e] }
   | s1 = stmt; NEWLINE; s2 = stmt; NEWLINE
-    { `CompoundStm (s1,s2) };
+    { I.CompoundStm (s1,s2) };
 
 expr:
   | n = NUM
-    { `NumExp n }
+    { I.NumExp n }
   | i = ID
-    { `IdExp i }
+    { I.IdExp i }
   | OPEN; e1 = expr; PLUS; e2 = expr; CLOSE
-    { `OpExp (e1, Plus, e2) }
+    { I.OpExp (e1, I.Plus, e2) }
   | OPEN; e1 = expr; MINUS; e2 = expr; CLOSE
-    { `OpExp (e1, Minus, e2) }
+    { I.OpExp (e1, I.Minus, e2) }
   | OPEN; e1 = expr; TIMES; e2 = expr; CLOSE
-    { `OpExp (e1, Times, e2) }
+    { I.OpExp (e1, I.Times, e2) }
   | OPEN; e1 = expr; DIV; e2 = expr; CLOSE
-    { `OpExp (e1, Div, e2) };
+    { I.OpExp (e1, I.Div, e2) };
 
 
