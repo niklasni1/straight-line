@@ -2,11 +2,12 @@ type id = string
 
 type binop  = Plus | Minus | Times | Div
 
-type stm = CompoundStm of stm * stm
-         | AssignStm of id * exp
-         | PrintStm of exp list
+type stm =  
+            AssignStm of id * exp
+            | PrintStm of exp 
 
- and exp = IdExp of id
+ and exp = 
+         IdExp of id
          | NumExp of int
          | OpExp of exp * binop * exp
 
@@ -20,13 +21,13 @@ module Env = Map.Make (Id)
 
 let empty = Env.empty
 
-let rec interpStm s env =
-  match s with
-  | CompoundStm (s1,s2) -> interpStm s2 (interpStm s1 env)
-  | AssignStm (id,exp) -> Env.add id (interpExp exp env) env
-  | PrintStm es -> match es with
-                   | [] -> env
-                   | e::tl -> print_int (interpExp e env); interpStm (PrintStm tl) env
+let rec interpStm stm env =
+  match stm with
+  | [] -> env
+  | s::ss -> let env = match s with
+              | AssignStm (id,exp) -> Env.add id (interpExp exp env) env
+              | PrintStm e -> print_int (interpExp e env); env
+    in interpStm ss env 
 
 and interpExp exp env =
   match exp with

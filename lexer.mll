@@ -8,8 +8,7 @@ exception SyntaxError of string
 
 let int = ['0'-'9']+
 let id = ['a'-'z']+
-let white = [' ' '\t' ]
-let newline = '\r' | '\n' | "\r\n"
+let white = [' ' '\t' '\n' '\r']
 
 rule read =
   parse
@@ -18,13 +17,13 @@ rule read =
   | "print" { PRINT }
   | "set" { SET }
   | id { ID (Lexing.lexeme lexbuf) }
-  | newline { NEWLINE }
   | '(' { OPEN }
   | ')' { CLOSE }
   | '+' { PLUS }
   | '-' { MINUS }
   | '/' { DIV }
   | '*' { TIMES }
+  | ';' { SEMICOLON }
   | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
   | eof { EOF }
 

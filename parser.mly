@@ -12,12 +12,12 @@
 %token DIV
 %token PRINT
 %token SET
-%token NEWLINE
+%token SEMICOLON
 %token EOF
 
 (* 'Interpreter' can't be abbreviated as our module definition above will *)
 (* not show up in the generated mli file. *)
-%start <Interpreter.stm option> prog
+%start <Interpreter.stm list option> prog
 
 %type <I.exp> expr
 %type <I.stm> stmt
@@ -25,16 +25,18 @@
 %%
 
 prog:
-  | s = stmt; EOF { Some s }
+  | s = stmts; EOF { Some s }
   | EOF { None };
 
+stmts:
+  | { [] }
+  | s = stmt; ss = stmts { s::ss }
+
 stmt:
-  | SET; i = ID; e = expr; NEWLINE
+  | SET; i = ID; e = expr; SEMICOLON
     { I.AssignStm (i,e) }
-  | PRINT; e = expr; NEWLINE
-    { I.PrintStm [e] }
-  | s1 = stmt; NEWLINE; s2 = stmt; NEWLINE
-    { I.CompoundStm (s1,s2) };
+  | PRINT; e = expr; SEMICOLON
+    { I.PrintStm e }
 
 expr:
   | n = NUM
