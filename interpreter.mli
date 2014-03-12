@@ -14,6 +14,8 @@ and exp =
 
 module Env : Map.S with type key = id
 
+val empty : int Env.t
+
 val interpStm : stm -> int Env.t -> int Env.t
 
 val interpExp : exp -> int Env.t -> int

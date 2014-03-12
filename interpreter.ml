@@ -18,6 +18,8 @@ module Id =
 
 module Env = Map.Make (Id)
 
+let empty = Env.empty
+
 let rec interpStm s env =
   match s with
   | CompoundStm (s1,s2) -> interpStm s2 (interpStm s1 env)
@@ -35,8 +37,3 @@ and interpExp exp env =
                           | Minus -> (interpExp e1 env) - (interpExp e2 env)
                           | Times -> (interpExp e1 env) * (interpExp e2 env)
                           | Div -> (interpExp e1 env) / (interpExp e2 env)
-;;
-
-let prog = CompoundStm(AssignStm("a", NumExp 3), PrintStm[IdExp "a"])
-
-let e = interpStm prog Env.empty
